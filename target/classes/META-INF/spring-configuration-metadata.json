@@ -1,0 +1,37 @@
+{
+  "groups": [
+    {
+      "name": "author",
+      "type": "com.kollice.book.entity.AuthorSettings",
+      "sourceType": "com.kollice.book.entity.AuthorSettings"
+    },
+    {
+      "name": "author",
+      "type": "com.kollice.sharpboot.Entity.AuthorSettings",
+      "sourceType": "com.kollice.sharpboot.Entity.AuthorSettings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "author.email",
+      "type": "java.lang.String",
+      "sourceType": "com.kollice.book.entity.AuthorSettings"
+    },
+    {
+      "name": "author.email",
+      "type": "java.lang.String",
+      "sourceType": "com.kollice.sharpboot.Entity.AuthorSettings"
+    },
+    {
+      "name": "author.name",
+      "type": "java.lang.String",
+      "sourceType": "com.kollice.book.entity.AuthorSettings"
+    },
+    {
+      "name": "author.name",
+      "type": "java.lang.String",
+      "sourceType": "com.kollice.sharpboot.Entity.AuthorSettings"
+    }
+  ],
+  "hints": []
+}
