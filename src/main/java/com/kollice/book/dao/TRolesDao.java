@@ -10,6 +10,6 @@ import java.util.List;
  * Created by 00259 on 2016/10/9.
  */
 public interface TRolesDao extends CustomRepository<TRoles, String> {
-    @Query("select r from TRoles r join TUsersRoles ur where ur.userid= :userid")
+    @Query("select r from TRoles r, TUsersRoles ur where r.id = ur.roleid and ur.userid= :userid")
     List<TRoles> findTRolesByUserid(String userid);
 }

@@ -12,6 +12,6 @@ import java.util.List;
 public interface TPermissionDao extends CustomRepository<TPermission, String> {
     List<TPermission> findByPermissionname(String permissionname);
 
-    @Query("select p from TPermission p join TPermissionRoles pr where pr.roleid= :roleId")
+    @Query("select p from TPermission p , TPermissionRoles pr where p.id = pr.permissionid and pr.roleid= :roleId")
     List<TPermission> findPermissionByRoleId(String roleId);
 }
