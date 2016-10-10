@@ -9,8 +9,13 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 public class IndexController {
+    @RequestMapping(value = "/mange")
+    ModelAndView manage() throws Exception {
+        return new ModelAndView("login");
+    }
+
     @RequestMapping(value = "/")
     ModelAndView index() throws Exception {
-        return new ModelAndView("login");
+        return new ModelAndView("index");
     }
 }
