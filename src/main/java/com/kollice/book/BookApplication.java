@@ -24,7 +24,6 @@ import javax.sql.DataSource;
 @SpringBootApplication
 @EnableWebMvc
 @EnableTransactionManagement
-@ImportResource({"classpath:ehcache.xml"}) // 引用xml配置文件
 @EnableJpaRepositories(repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class)
 public class BookApplication extends WebMvcConfigurerAdapter implements TransactionManagementConfigurer {
     /* 以下是事务配置，支持多数据源事务 start */

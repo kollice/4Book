@@ -38,7 +38,7 @@ public class BookShiroFilterFactoryBean extends ShiroFilterFactoryBean {
     @Override
     protected AbstractShiroFilter createInstance() throws Exception {
 
-        SecurityManager securityManager = (SecurityManager) getSecurityManager();
+        org.apache.shiro.mgt.SecurityManager securityManager = (org.apache.shiro.mgt.SecurityManager) getSecurityManager();
         if (securityManager == null) {
             String msg = "SecurityManager property must be set.";
             throw new BeanInitializationException(msg);

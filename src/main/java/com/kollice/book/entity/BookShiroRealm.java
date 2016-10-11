@@ -7,6 +7,7 @@ import com.kollice.book.domain.TUsers;
 import com.kollice.book.service.LoginService;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -15,7 +16,9 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +46,13 @@ public class BookShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         logger.info("##################执行Shiro权限认证##################");
+        if (!SecurityUtils.getSubject().isAuthenticated()) {
+            doClearCache(principalCollection);
+            SecurityUtils.getSubject().logout();
+            return null;
+        }
+//        TUsers user = (TUsers) getSession("currentUser");
+
         //获取当前登录输入的用户名，等价于(String) principalCollection.fromRealm(getName()).iterator().next();
         String loginName = (String)super.getAvailablePrincipal(principalCollection);
         //到数据库查是否有此对象
@@ -84,9 +94,45 @@ public class BookShiroRealm extends AuthorizingRealm {
         //查出是否有此用户
         List<TUsers> users=loginService.findByUsername(token.getUsername());
         if(users!=null && 0 == users.size()){
+            SimpleAuthenticationInfo result = new SimpleAuthenticationInfo(users.get(0).getUsername(), users.get(0).getPassword(), getName());
             // 若存在，将此用户存放到登录认证info中，无需自己做密码对比，Shiro会为我们进行密码对比校验
-            return new SimpleAuthenticationInfo(users.get(0).getUsername(), users.get(0).getPassword(), getName());
+//            this.setSession("currentUser",users);
+            return result;
         }
         return null;
     }
+
+//    /**
+//     * 将一些数据放到ShiroSession中,以便于其它地方使用
+//     * @see
+//     */
+//    private void setSession(Object key, Object value){
+//        Subject currentUser = SecurityUtils.getSubject();
+//        if(null != currentUser){
+//            Session session = currentUser.getSession();
+//            logger.info("Session默认超时时间为[" + session.getTimeout() + "]毫秒");
+//            if(null != session){
+//                session.setAttribute(key, value);
+//            }
+//        }
+//    }
+//
+//
+//    /**
+//     * 将一些数据放到ShiroSession中,以便于其它地方使用
+//     * @see
+//     */
+//    private Object getSession(Object key){
+//        Subject currentUser = SecurityUtils.getSubject();
+//        if(null != currentUser){
+//            Session session = currentUser.getSession();
+//            logger.info("Session默认超时时间为[" + session.getTimeout() + "]毫秒");
+//            if(null != session){
+//                return session.getAttribute(key);
+//            }
+//        }
+//        return null;
+//    }
+
+
 }
