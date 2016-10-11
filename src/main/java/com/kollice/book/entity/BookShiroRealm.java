@@ -57,7 +57,7 @@ public class BookShiroRealm extends AuthorizingRealm {
         String loginName = (String)super.getAvailablePrincipal(principalCollection);
         //到数据库查是否有此对象
         List<TUsers> users=loginService.findByUsername(loginName);// 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
-        if(users!=null && 0 == users.size()){
+        if(users!=null && 1 == users.size()){
             //权限信息对象info,用来存放查出的用户的所有的角色（role）及权限（permission）
             SimpleAuthorizationInfo info=new SimpleAuthorizationInfo();
             //用户的角色对应的所有权限，如果只使用角色定义访问权限，下面的四行可以不要
@@ -93,7 +93,7 @@ public class BookShiroRealm extends AuthorizingRealm {
 
         //查出是否有此用户
         List<TUsers> users=loginService.findByUsername(token.getUsername());
-        if(users!=null && 0 == users.size()){
+        if(users!=null && 1 == users.size()){
             SimpleAuthenticationInfo result = new SimpleAuthenticationInfo(users.get(0).getUsername(), users.get(0).getPassword(), getName());
             // 若存在，将此用户存放到登录认证info中，无需自己做密码对比，Shiro会为我们进行密码对比校验
 //            this.setSession("currentUser",users);

@@ -76,18 +76,18 @@ public class ShiroConfiguration {
         return daap;
     }
 
-    @Bean
-    public FirstSuccessfulStrategy getFirstSuccessfulStrategy() {
-        FirstSuccessfulStrategy fss = new FirstSuccessfulStrategy();
-        return fss;
-    }
-
-    @Bean
-    public ModularRealmAuthenticator getModularRealmAuthenticator() {
-        ModularRealmAuthenticator mra = new ModularRealmAuthenticator();
-        mra.setAuthenticationStrategy(getFirstSuccessfulStrategy());
-        return mra;
-    }
+//    @Bean
+//    public FirstSuccessfulStrategy getFirstSuccessfulStrategy() {
+//        FirstSuccessfulStrategy fss = new FirstSuccessfulStrategy();
+//        return fss;
+//    }
+//
+//    @Bean
+//    public ModularRealmAuthenticator getModularRealmAuthenticator() {
+//        ModularRealmAuthenticator mra = new ModularRealmAuthenticator();
+//        mra.setAuthenticationStrategy(getFirstSuccessfulStrategy());
+//        return mra;
+//    }
 
     @Bean(name = "securityManager")
     public DefaultWebSecurityManager getDefaultWebSecurityManager(BookShiroRealm bookShiroRealm) {
@@ -96,7 +96,7 @@ public class ShiroConfiguration {
 //      <!-- 用户授权/认证信息Cache, 采用EhCache 缓存 -->
         dwsm.setCacheManager(getEhCacheManager());
 
-        dwsm.setAuthenticator(getModularRealmAuthenticator());
+//        dwsm.setAuthenticator(getModularRealmAuthenticator());
         return dwsm;
     }
 
