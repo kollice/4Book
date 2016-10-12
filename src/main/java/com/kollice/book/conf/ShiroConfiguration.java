@@ -2,8 +2,7 @@ package com.kollice.book.conf;
 
 import com.kollice.book.entity.BookShiroFilterFactoryBean;
 import com.kollice.book.entity.BookShiroRealm;
-import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
-import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
+import com.kollice.book.entity.CustomPermissionsAuthorizationFilter;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -17,6 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
+import javax.servlet.Filter;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -76,19 +77,6 @@ public class ShiroConfiguration {
         return daap;
     }
 
-//    @Bean
-//    public FirstSuccessfulStrategy getFirstSuccessfulStrategy() {
-//        FirstSuccessfulStrategy fss = new FirstSuccessfulStrategy();
-//        return fss;
-//    }
-//
-//    @Bean
-//    public ModularRealmAuthenticator getModularRealmAuthenticator() {
-//        ModularRealmAuthenticator mra = new ModularRealmAuthenticator();
-//        mra.setAuthenticationStrategy(getFirstSuccessfulStrategy());
-//        return mra;
-//    }
-
     @Bean(name = "securityManager")
     public DefaultWebSecurityManager getDefaultWebSecurityManager(BookShiroRealm bookShiroRealm) {
         DefaultWebSecurityManager dwsm = new DefaultWebSecurityManager();
@@ -114,20 +102,21 @@ public class ShiroConfiguration {
      * @create  2016年1月14日
      */
     private void loadShiroFilterChain(ShiroFilterFactoryBean shiroFilterFactoryBean){
-        /////////////////////// 下面这些规则配置最好配置到配置文件中 ///////////////////////
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         // authc：该过滤器下的页面必须验证后才能访问，它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter
         filterChainDefinitionMap.put("/manage/*", "authc");// 这里为了测试，只限制/user，实际开发中请修改为具体拦截的请求规则
         // anon：它对应的过滤器里面是空的,什么都没做
-        logger.info("##################从数据库读取权限规则，加载到shiroFilter中##################");
-        filterChainDefinitionMap.put("/user/edit/**", "authc,perms[user:edit]");// 这里为了测试，固定写死的值，也可以从数据库或其他配置中读取
-
-//        filterChainDefinitionMap.put("/manage/login", "anon");
-//        filterChainDefinitionMap.put("/*", "anon");//anon 可以理解为不拦截
+        filterChainDefinitionMap.put("/manage/login", "anon");
+        filterChainDefinitionMap.put("/*", "anon");//anon 可以理解为不拦截
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
     }
 
+
+    @Bean
+    public CustomPermissionsAuthorizationFilter getCustomPermissionsAuthorizationFilter() {
+        return  new CustomPermissionsAuthorizationFilter();
+    }
 
 
     /**
@@ -153,6 +142,11 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
 
         loadShiroFilterChain(shiroFilterFactoryBean);
+
+        Map<String, Filter> filters = new HashMap<>();
+        filters.put("bookfilter",getCustomPermissionsAuthorizationFilter());
+        shiroFilterFactoryBean.setFilters(filters);
+
         return shiroFilterFactoryBean;
     }
 

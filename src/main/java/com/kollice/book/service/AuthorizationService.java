@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by 00259 on 2016/10/10.
  */
 @Service
 @Transactional
-public class LoginService {
+public class AuthorizationService {
     @Autowired
     TUsersDao tUsersDao;
     @Autowired
@@ -68,6 +69,14 @@ public class LoginService {
      */
     public List<TPermission> findPermissionByRole(String roleId) {
         return tPermissionDao.findPermissionByRoleId(roleId);
+    }
+
+    /**
+     * 取得所有权限
+     * @return
+     */
+    public List<String> getAllPermissionUrl() {
+        return tPermissionDao.findAll().stream().map(TPermission::getUrl).collect(Collectors.toList());
     }
 
 }

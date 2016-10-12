@@ -57,8 +57,8 @@ public class TestController {
     }
 
     @RequestMapping("/savePermission")
-    public TPermission savePermission(String permissionname){
-        TPermission p = tPermissionDao.save(new TPermission(null,permissionname));
+    public TPermission savePermission(String permissionname,String url){
+        TPermission p = tPermissionDao.save(new TPermission(null,permissionname,url));
         return p;
     }
 

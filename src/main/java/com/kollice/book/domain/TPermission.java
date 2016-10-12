@@ -15,6 +15,7 @@ public class TPermission implements java.io.Serializable {
 
 	private String id;
 	private String permissionname;
+	private String url;
 
 	// Constructors
 
@@ -28,14 +29,14 @@ public class TPermission implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public TPermission(String id, String permissionname) {
+	public TPermission(String id, String permissionname, String url) {
 		this.id = id;
 		this.permissionname = permissionname;
+		this.url = url;
 	}
 
 	// Property accessors
 	@Id
-//    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @GenericGenerator(name="uuid_s",strategy="uuid")
     @GeneratedValue(generator="uuid_s")
 	@Column(name = "ID", unique = true, nullable = false, length = 36)
@@ -54,6 +55,15 @@ public class TPermission implements java.io.Serializable {
 
 	public void setPermissionname(String permissionname) {
 		this.permissionname = permissionname;
+	}
+
+	@Column(name = "URL", length = 200)
+	public String getUrl() {
+		return this.url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 }

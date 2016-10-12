@@ -1,10 +1,9 @@
 package com.kollice.book.entity;
 
-import com.kollice.book.dao.TUsersDao;
 import com.kollice.book.domain.TPermission;
 import com.kollice.book.domain.TRoles;
 import com.kollice.book.domain.TUsers;
-import com.kollice.book.service.LoginService;
+import com.kollice.book.service.AuthorizationService;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.shiro.SecurityUtils;
@@ -16,13 +15,9 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -35,7 +30,7 @@ public class BookShiroRealm extends AuthorizingRealm {
     private static final Logger logger = LoggerFactory.getLogger(BookShiroRealm.class);
 
     @Resource
-    private LoginService loginService;
+    private AuthorizationService loginService;
 
     /**
      * 权限认证，为当前登录的Subject授予角色和权限
