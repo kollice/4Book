@@ -1,7 +1,5 @@
 package com.kollice.book.controller;
 
-import com.kollice.book.dao.PersonDao;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.shiro.SecurityUtils;
@@ -9,11 +7,11 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.Map;
 
 /**
  * Created by 00259 on 2016/10/8.
@@ -21,8 +19,6 @@ import java.util.Map;
 @RestController
 public class LoginController {
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
-    @Autowired
-    PersonDao personDao;
 
     @RequestMapping(value = "login",method = RequestMethod.POST)
     ModelAndView login(@RequestParam String username,@RequestParam String password) throws Exception {

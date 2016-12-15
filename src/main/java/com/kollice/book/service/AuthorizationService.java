@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * Created by 00259 on 2016/10/10.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AuthorizationService {
     @Autowired
     TUsersDao tUsersDao;

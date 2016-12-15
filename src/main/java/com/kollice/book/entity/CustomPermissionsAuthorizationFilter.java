@@ -22,7 +22,7 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
     private static final Logger log = LoggerFactory.getLogger(CustomPermissionsAuthorizationFilter.class);
 
     @Autowired
-    AuthorizationService loginService;
+    AuthorizationService authorizationService;
 
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
         boolean isPermitted = true;
@@ -32,7 +32,7 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
             HttpServletResponse res = (HttpServletResponse)response;
             HttpServletRequest req = (HttpServletRequest)request;
             String url = req.getScheme() + "://" + req.getServerName() + ":"
-                    + req.getServerPort() + req.getContextPath();
+                    + req.getServerPort() + req.getContextPath() + "/index";
             res.sendRedirect(url);
         }
 
@@ -51,7 +51,7 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
         uri = uri.replaceFirst(contextPath,"").replaceFirst("/+","");
 
         //获得所有的配置的菜单路径 如果请求的路径存在于配置的路径 则进行匹配 如果不是则放行
-        List<String> urlList = loginService.getAllPermissionUrl();
+        List<String> urlList = authorizationService.getAllPermissionUrl();
 
         for(String url:urlList){
             if(url.contains(uri)){

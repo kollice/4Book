@@ -1,13 +1,12 @@
 package com.kollice.book;
 
-import com.kollice.book.dao.PersonDao;
 import com.kollice.book.entity.AuthorSettings;
+import com.kollice.book.entity.CustomPermissionsAuthorizationFilter;
 import com.kollice.book.framework.base.CustomRepositoryFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -27,7 +26,7 @@ import javax.sql.DataSource;
 @EnableJpaRepositories(repositoryFactoryBeanClass = CustomRepositoryFactoryBean.class)
 public class BookApplication extends WebMvcConfigurerAdapter implements TransactionManagementConfigurer {
     /* 以下是事务配置，支持多数据源事务 start */
-    @Resource(name="txManager")
+    @Resource(name="transactionManager")
     private PlatformTransactionManager txManager;
 
     @Override
@@ -35,8 +34,8 @@ public class BookApplication extends WebMvcConfigurerAdapter implements Transact
         return txManager;
     }
 
-    @Bean(name = "txManager")
-    public PlatformTransactionManager txManager(DataSource dataSource) {
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 

@@ -95,6 +95,11 @@ public class ShiroConfiguration {
         return aasa;
     }
 
+    @Bean(name = "customPermissionsAuthorizationFilter")
+    public CustomPermissionsAuthorizationFilter customPermissionsAuthorizationFilter() {
+        return new CustomPermissionsAuthorizationFilter();
+    }
+
     /**
      * 加载shiroFilter权限控制规则（从数据库读取然后配置）
      *
@@ -104,12 +109,19 @@ public class ShiroConfiguration {
     private void loadShiroFilterChain(ShiroFilterFactoryBean shiroFilterFactoryBean){
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         // authc：该过滤器下的页面必须验证后才能访问，它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter
-        filterChainDefinitionMap.put("/manage/*", "authc");// 这里为了测试，只限制/user，实际开发中请修改为具体拦截的请求规则
+        filterChainDefinitionMap.put("/manage/*", "user,customPermissionsAuthorizationFilter");// 这里为了测试，只限制/user，实际开发中请修改为具体拦截的请求规则
         // anon：它对应的过滤器里面是空的,什么都没做
         filterChainDefinitionMap.put("/manage/login", "anon");
         filterChainDefinitionMap.put("/*", "anon");//anon 可以理解为不拦截
-
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+
+//        Map<String,Filter> filterChainDefinitionMap = new LinkedHashMap<String,Filter>();
+//        filterChainDefinitionMap.put("/manage/*", getCustomPermissionsAuthorizationFilter());// 这里为了测试，只限制/user，实际开发中请修改为具体拦截的请求规则
+//        // anon：它对应的过滤器里面是空的,什么都没做
+//        filterChainDefinitionMap.put("/manage/login", "anon");
+//        filterChainDefinitionMap.put("/*", "anon");//anon 可以理解为不拦截
+//
+//        shiroFilterFactoryBean.setFilters(filterChainDefinitionMap);
     }
 
 
