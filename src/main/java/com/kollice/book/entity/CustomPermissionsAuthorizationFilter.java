@@ -7,6 +7,7 @@ import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -22,6 +23,7 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
     private static final Logger log = LoggerFactory.getLogger(CustomPermissionsAuthorizationFilter.class);
 
     @Autowired
+    @Lazy
     AuthorizationService authorizationService;
 
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {

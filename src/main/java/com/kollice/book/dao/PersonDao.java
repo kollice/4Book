@@ -3,6 +3,7 @@ package com.kollice.book.dao;
 
 import com.kollice.book.domain.Person;
 import com.kollice.book.framework.base.CustomRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -21,6 +22,7 @@ public interface PersonDao extends CustomRepository<Person, Long> {
 	Person withNameAndAddressNamedQuery(String name, String address);
 
     @RestResource(path = "nameStartsWith", rel = "nameStartsWith")
+    @Cacheable(value = "personcache",keyGenerator = "wiselyKeyGenerator")
     Person findByNameStartsWith(@Param("name")String name);
 
 }

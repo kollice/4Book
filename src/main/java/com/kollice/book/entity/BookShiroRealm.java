@@ -15,7 +15,9 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,43 +93,43 @@ public class BookShiroRealm extends AuthorizingRealm {
         if(users!=null && 1 == users.size()){
             SimpleAuthenticationInfo result = new SimpleAuthenticationInfo(users.get(0).getUsername(), users.get(0).getPassword(), getName());
             // 若存在，将此用户存放到登录认证info中，无需自己做密码对比，Shiro会为我们进行密码对比校验
-//            this.setSession("currentUser",users);
+            this.setSession("currentUser",users);
             return result;
         }
         return null;
     }
 
-//    /**
-//     * 将一些数据放到ShiroSession中,以便于其它地方使用
-//     * @see
-//     */
-//    private void setSession(Object key, Object value){
-//        Subject currentUser = SecurityUtils.getSubject();
-//        if(null != currentUser){
-//            Session session = currentUser.getSession();
-//            logger.info("Session默认超时时间为[" + session.getTimeout() + "]毫秒");
-//            if(null != session){
-//                session.setAttribute(key, value);
-//            }
-//        }
-//    }
-//
-//
-//    /**
-//     * 将一些数据放到ShiroSession中,以便于其它地方使用
-//     * @see
-//     */
-//    private Object getSession(Object key){
-//        Subject currentUser = SecurityUtils.getSubject();
-//        if(null != currentUser){
-//            Session session = currentUser.getSession();
-//            logger.info("Session默认超时时间为[" + session.getTimeout() + "]毫秒");
-//            if(null != session){
-//                return session.getAttribute(key);
-//            }
-//        }
-//        return null;
-//    }
+    /**
+     * 将一些数据放到ShiroSession中,以便于其它地方使用
+     * @see
+     */
+    private void setSession(Object key, Object value){
+        Subject currentUser = SecurityUtils.getSubject();
+        if(null != currentUser){
+            Session session = currentUser.getSession();
+            logger.info("Session默认超时时间为[" + session.getTimeout() + "]毫秒");
+            if(null != session){
+                session.setAttribute(key, value);
+            }
+        }
+    }
+
+
+    /**
+     * 将一些数据放到ShiroSession中,以便于其它地方使用
+     * @see
+     */
+    private Object getSession(Object key){
+        Subject currentUser = SecurityUtils.getSubject();
+        if(null != currentUser){
+            Session session = currentUser.getSession();
+            logger.info("Session默认超时时间为[" + session.getTimeout() + "]毫秒");
+            if(null != session){
+                return session.getAttribute(key);
+            }
+        }
+        return null;
+    }
 
 
 }

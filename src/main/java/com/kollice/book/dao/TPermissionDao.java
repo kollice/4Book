@@ -2,6 +2,7 @@ package com.kollice.book.dao;
 
 import com.kollice.book.domain.TPermission;
 import com.kollice.book.framework.base.CustomRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
