@@ -25,4 +25,10 @@ public interface PersonDao extends CustomRepository<Person, Long> {
     @Cacheable(value = "personcache",keyGenerator = "wiselyKeyGenerator")
     Person findByNameStartsWith(@Param("name")String name);
 
+    @Override
+    @Cacheable(value = "sdf" ,keyGenerator = "wiselyKeyGenerator")
+    @Query("select p from Person p")
+    @RestResource(path = "aaa", rel = "aaa")
+    List<Person> findAll();
+
 }

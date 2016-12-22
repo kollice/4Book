@@ -15,6 +15,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.realm.CachingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -63,7 +64,7 @@ public class BookShiroRealm extends AuthorizingRealm {
             info.setRoles(roleList.stream().map(TRoles::getRolename).collect(Collectors.toSet()));
             for (TRoles role : roleList) {
                 List<TPermission> permissionList = loginService.findPermissionByRole(role);
-                info.addStringPermissions(permissionList.stream().map(TPermission::getPermissionname).collect(Collectors.toSet()));
+                info.addStringPermissions(permissionList.stream().map(TPermission::getUrl).collect(Collectors.toSet()));
             }
             // 或者按下面这样添加
             //添加一个角色,不是配置意义上的添加,而是证明该用户拥有admin角色
@@ -93,7 +94,7 @@ public class BookShiroRealm extends AuthorizingRealm {
         if(users!=null && 1 == users.size()){
             SimpleAuthenticationInfo result = new SimpleAuthenticationInfo(users.get(0).getUsername(), users.get(0).getPassword(), getName());
             // 若存在，将此用户存放到登录认证info中，无需自己做密码对比，Shiro会为我们进行密码对比校验
-            this.setSession("currentUser",users);
+            this.setSession("currentUser",users.get(0));
             return result;
         }
         return null;
@@ -130,6 +131,4 @@ public class BookShiroRealm extends AuthorizingRealm {
         }
         return null;
     }
-
-
 }

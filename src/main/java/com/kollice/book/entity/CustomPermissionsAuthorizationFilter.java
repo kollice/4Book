@@ -23,11 +23,11 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
     private static final Logger log = LoggerFactory.getLogger(CustomPermissionsAuthorizationFilter.class);
 
     @Autowired
-    @Lazy
+//    @Lazy
     AuthorizationService authorizationService;
 
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
-        boolean isPermitted = true;
+        boolean isPermitted = false;
         Subject user = SecurityUtils.getSubject();
 
         if(!SecurityUtils.getSubject().isAuthenticated()){
@@ -40,7 +40,7 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
 
         //admin特殊处理 放行所有url
         if(user.getPrincipal().equals("admin")){
-            return isPermitted;
+            return !isPermitted;
         }
 
 
@@ -57,11 +57,11 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
 
         for(String url:urlList){
             if(url.contains(uri)){
-                isPermitted = false;
+                isPermitted = true;
             }
         }
 
-        if(!isPermitted){
+        if(isPermitted){
             isPermitted = subject.isPermitted(uri);
         }
         return isPermitted;

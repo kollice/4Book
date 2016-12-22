@@ -2,8 +2,15 @@ package com.kollice.book.conf;
 
 import com.kollice.book.entity.BookShiroFilterFactoryBean;
 import com.kollice.book.entity.BookShiroRealm;
+import com.kollice.book.entity.CustomCredentialsMatcher;
 import com.kollice.book.entity.CustomPermissionsAuthorizationFilter;
+import org.apache.shiro.authc.pam.AuthenticationStrategy;
+import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
+import org.apache.shiro.authz.ModularRealmAuthorizer;
 import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -16,36 +23,48 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
 import javax.servlet.Filter;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by 00259 on 2016/10/8.
  */
 @Configuration
-public class ShiroConfiguration {
+public class ShiroConfiguration{
     private static final Logger logger = LoggerFactory.getLogger(ShiroConfiguration.class);
 
-//    @Bean
-//    public EhCacheManager getEhCacheManager() {
-//        EhCacheManager em = new EhCacheManager();
-//        em.setCacheManagerConfigFile("classpath:ehcache-shiro.xml");
-//        return em;
-//    }
-//
-//    @Bean(name = "bookShiroRealm")
-//    public BookShiroRealm bookShiroRealm(EhCacheManager cacheManager) {
-//        BookShiroRealm realm = new BookShiroRealm();
-//        realm.setCacheManager(cacheManager);
-//        return realm;
-//    }
+    @Bean
+    public EhCacheManager getEhCacheManager() {
+        EhCacheManager em = new EhCacheManager();
+        em.setCacheManagerConfigFile("classpath:ehcache-shiro.xml");
+        return em;
+    }
+
+    @Bean(name = "customCredentialsMatcher")
+    public CustomCredentialsMatcher customCredentialsMatcher() {
+        CustomCredentialsMatcher customCredentialsMatcher = new CustomCredentialsMatcher();
+        customCredentialsMatcher.setHashAlgorithmName("md5");
+        customCredentialsMatcher.setHashIterations(2);
+        customCredentialsMatcher.setStoredCredentialsHexEncoded(true);
+        return customCredentialsMatcher;
+    }
+
+    @Bean(name = "bookShiroRealm")
+    public BookShiroRealm bookShiroRealm(CustomCredentialsMatcher customCredentialsMatcher) {
+        BookShiroRealm realm = new BookShiroRealm();
+        realm.setCacheManager(getEhCacheManager());
+        realm.setCachingEnabled(true);
+        realm.setCredentialsMatcher(customCredentialsMatcher);
+        return realm;
+    }
 
 //    @Value("${spring.redis.host}")
 //    private String host;
@@ -58,25 +77,32 @@ public class ShiroConfiguration {
 //        return new org.springframework.data.redis.cache.RedisCacheManager(redisTemplate);
 //    }
 
-    @Bean(name = "redisManager")
-    public org.crazycake.shiro.RedisManager redisManager() {
-        RedisManager redisManager = new RedisManager();
-        return redisManager;
-    }
-
-    @Bean(name = "shiroCacheManager")
-    public CacheManager cacheManager(RedisManager redisManager) {
-        org.crazycake.shiro.RedisCacheManager cacheManager = new org.crazycake.shiro.RedisCacheManager();
-        cacheManager.setRedisManager(redisManager);
-        return cacheManager;
-    }
-
-    @Bean(name = "bookShiroRealm")
-    public BookShiroRealm bookShiroRealm(CacheManager shiroCacheManager) {
-        BookShiroRealm realm = new BookShiroRealm();
-        realm.setCacheManager(shiroCacheManager);
-        return realm;
-    }
+//    @Bean(name = "redisManager")
+//    public org.crazycake.shiro.RedisManager redisManager() {
+//        RedisManager redisManager = new RedisManager();
+//        return redisManager;
+//    }
+//
+//    @Bean(name = "shiroCacheManager")
+//    public CacheManager cacheManager(RedisManager redisManager) {
+//        org.crazycake.shiro.RedisCacheManager cacheManager = new org.crazycake.shiro.RedisCacheManager();
+//        cacheManager.setRedisManager(redisManager);
+//        return cacheManager;
+//    }
+//
+//    @Bean(name = "lifecycleBeanPostProcessor")
+//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+//        return new LifecycleBeanPostProcessor();
+//    }
+//
+//    @Bean(name = "bookShiroRealm")
+//    @DependsOn("lifecycleBeanPostProcessor")
+//    public BookShiroRealm bookShiroRealm(CacheManager shiroCacheManager) {
+//        BookShiroRealm realm = new BookShiroRealm();
+//        realm.setCacheManager(shiroCacheManager);
+//        realm.setCachingEnabled(true);
+//        return realm;
+//    }
 
     /**
      * 注册DelegatingFilterProxy（Shiro）
@@ -113,14 +139,30 @@ public class ShiroConfiguration {
         return daap;
     }
 
+    @Bean(name="authenticationStrategy")
+    public AuthenticationStrategy authenticationStrategy() {
+        return new FirstSuccessfulStrategy();
+    }
+
+
+    @Bean(name="modularRealmAuthenticator")
+    public ModularRealmAuthenticator modularRealmAuthenticator(AuthenticationStrategy authenticationStrategy) {
+        ModularRealmAuthenticator modularRealmAuthenticator = new ModularRealmAuthenticator();
+        modularRealmAuthenticator.setAuthenticationStrategy(authenticationStrategy);
+        return modularRealmAuthenticator;
+    }
+
     @Bean(name = "securityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(BookShiroRealm bookShiroRealm,CacheManager shiroCacheManager) {
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(BookShiroRealm bookShiroRealm,CacheManager shiroCacheManager, ModularRealmAuthenticator modularRealmAuthenticator) {
         DefaultWebSecurityManager dwsm = new DefaultWebSecurityManager();
-        dwsm.setRealm(bookShiroRealm);
+        dwsm.setAuthenticator(modularRealmAuthenticator);
+        dwsm.setCacheManager(getEhCacheManager());
+//        dwsm.setCacheManager(shiroCacheManager);
+        List<Realm> realms = new ArrayList<Realm>();
+        realms.add(bookShiroRealm);
+        dwsm.setRealms(realms);
 //      <!-- 用户授权/认证信息Cache, 采用EhCache 缓存 -->
 //        dwsm.setCacheManager(getEhCacheManager());
-        dwsm.setCacheManager(shiroCacheManager);
-//        dwsm.setAuthenticator(getModularRealmAuthenticator());
         return dwsm;
     }
 

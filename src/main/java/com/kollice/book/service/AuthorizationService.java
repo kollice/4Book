@@ -76,7 +76,7 @@ public class AuthorizationService {
      * 取得所有权限
      * @return
      */
-    @Cacheable(value = "permission")
+//    @Cacheable(value = "permission" ,keyGenerator = "wiselyKeyGenerator")
     public List<String> getAllPermissionUrl() {
         return tPermissionDao.findAll().stream().map(TPermission::getUrl).collect(Collectors.toList());
     }
