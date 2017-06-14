@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by 00259 on 2016/10/8.
+ * Created by 白建业 on 2016/10/8.
  */
 public class BookShiroRealm extends AuthorizingRealm {
     private static final Logger logger = LoggerFactory.getLogger(BookShiroRealm.class);

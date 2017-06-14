@@ -5,7 +5,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 
 /**
- * Created by 00259 on 2016/12/22.
+ * Created by 白建业 on 2016/12/22.
  */
 public class CustomCredentialsMatcher extends HashedCredentialsMatcher {
     @Override

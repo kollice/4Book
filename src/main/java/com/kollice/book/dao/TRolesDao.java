@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 /**
- * Created by 00259 on 2016/10/9.
+ * Created by 白建业 on 2016/10/9.
  */
 public interface TRolesDao extends CustomRepository<TRoles, String> {
     @Query("select r from TRoles r, TUsersRoles ur where r.id = ur.roleid and ur.userid= :userid")

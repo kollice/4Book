@@ -19,7 +19,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import java.lang.reflect.Method;
 
 /**
- * Created by 00259 on 2016/12/15.
+ * Created by 白建业 on 2016/12/15.
  */
 @Configuration
 @EnableCaching

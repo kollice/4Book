@@ -3,6 +3,7 @@ package com.kollice.book;
 import com.kollice.book.entity.AuthorSettings;
 import com.kollice.book.entity.CustomPermissionsAuthorizationFilter;
 import com.kollice.book.framework.base.CustomRepositoryFactoryBean;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -64,6 +65,13 @@ public class BookApplication extends WebMvcConfigurerAdapter implements Transact
         return resolver;
     }
     /* 以下是视图配置 end */
+
+    @Bean
+    public EhCacheManager getEhCacheManager(){
+        EhCacheManager ehcacheManager = new EhCacheManager();
+        ehcacheManager.setCacheManagerConfigFile("classpath:ehcache-shiro.xml");
+        return ehcacheManager;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(BookApplication.class, args);

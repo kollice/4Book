@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by 00259 on 2016/10/12.
+ * Created by 白建业 on 2016/10/12.
  */
 public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
     private static final Logger log = LoggerFactory.getLogger(CustomPermissionsAuthorizationFilter.class);
@@ -43,7 +43,6 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
             return !isPermitted;
         }
 
-
         HttpServletRequest req = (HttpServletRequest) request;
         Subject subject = getSubject(request, response);
         String uri = req.getRequestURI();
@@ -56,6 +55,9 @@ public class CustomPermissionsAuthorizationFilter extends PermissionsAuthorizati
         List<String> urlList = authorizationService.getAllPermissionUrl();
 
         for(String url:urlList){
+            if (url == null) {
+                continue;
+            }
             if(url.contains(uri)){
                 isPermitted = true;
             }

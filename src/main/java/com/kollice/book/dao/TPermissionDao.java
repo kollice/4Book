@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 /**
- * Created by 00259 on 2016/10/9.
+ * Created by 白建业 on 2016/10/9.
  */
 public interface TPermissionDao extends CustomRepository<TPermission, String> {
     List<TPermission> findByPermissionname(String permissionname);

@@ -35,7 +35,7 @@ import javax.servlet.Filter;
 import java.util.*;
 
 /**
- * Created by 00259 on 2016/10/8.
+ * Created by 白建业 on 2016/10/8.
  */
 @Configuration
 public class ShiroConfiguration{

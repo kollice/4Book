@@ -1,14 +1,12 @@
 package com.kollice.book.domain;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 
 /**
  * TRoles entity. @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "T_ROLES", schema = "BOOK")
+@Table(name = "T_ROLES")
 public class TRoles implements java.io.Serializable {
 
 	// Fields
@@ -36,8 +34,8 @@ public class TRoles implements java.io.Serializable {
 	// Property accessors
 	@Id
 //    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    @GenericGenerator(name="uuid_s",strategy="uuid")
-    @GeneratedValue(generator="uuid_s")
+//    @GenericGenerator(name="uuid_s",strategy="uuid")
+//    @GeneratedValue(generator="uuid_s")
 	@Column(name = "ID", unique = true, nullable = false, length = 36)
 	public String getId() {
 		return this.id;

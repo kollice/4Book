@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by 00259 on 2016/10/8.
+ * Created by 白建业 on 2016/10/8.
  */
 public class BookShiroFilterFactoryBean extends ShiroFilterFactoryBean {
     // 对ShiroFilter来说，需要直接忽略的请求

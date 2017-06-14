@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Created by 00259 on 2016/10/8.
+ * Created by 白建业 on 2016/10/8.
  */
 @RestController
 public class LoginController {
@@ -71,6 +71,13 @@ public class LoginController {
     @RequestMapping(value = "/manage/gg")
     ModelAndView gg() throws Exception {
         return new ModelAndView("gg");
+    }
+
+    @RequestMapping(value = "logout",method = RequestMethod.POST)
+    ModelAndView logout() throws Exception {
+        Subject currentUser = SecurityUtils.getSubject();
+        currentUser.logout();
+        return new ModelAndView("login");
     }
 
 }
